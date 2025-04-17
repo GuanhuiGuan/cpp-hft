@@ -1,3 +1,4 @@
 main
-main.DSYM
+**/*.DSYM
 .vscode
+**/*.a
