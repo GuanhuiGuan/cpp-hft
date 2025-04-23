@@ -1,11 +1,18 @@
 #include "ringbuffer.h"
+#include <sstream>
 
 int main() {
-    RingBuffer<int> rb(8);
-    for (int i {0}; i < 10; ++i) rb.enqueue(i);
-    std::cout << rb.size() << '\n';
+    RingBuffer<std::string> rb(5);
     std::cout << rb << '\n';
-    while (!rb.empty()) std::cout << rb.dequeue() << ' ';
+    for (int i {0}; i < 3; ++i) rb.enqueue((std::stringstream() << 's' << i).str());
+    std::cout << rb << '\n';
+    for (int i {40}; i < 45; ++i) rb.enqueue((std::stringstream() << 's' << i).str());
+    std::cout << rb << '\n';
+    std::string s;
+    while (!rb.empty()) std::cout << rb.dequeue(s) << ':' << s << ' ';
+    std::cout << '\n';
+    std::cout << rb << '\n';
+    rb.enqueue("str");
     std::cout << rb << '\n';
 
     return 0;
