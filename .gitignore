@@ -2,3 +2,4 @@ main
 **/*.DSYM
 .vscode
 **/*.a
+**/*.out
