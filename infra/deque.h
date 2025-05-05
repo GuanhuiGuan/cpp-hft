@@ -50,6 +50,9 @@ struct Iter {
         }
         return true;
     }
+    T& operator*() const {return *curr_;}
+    Iter& operator++() {incre(); return *this;}
+    Iter& operator--() {decre(); return *this;}
 };
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const Iter<T>& iter) {
@@ -130,6 +133,8 @@ public:
         std::cout << "beg:" << beg_ << ",end:" << end_ << "\n";
     }
     bool empty() const {return size_ == 0;}
+    Iter<T> begin() const {return beg_;}
+    Iter<T> end() const {return end_;}
 private:
     void insertChunkBeg(Chunk<T>* chunk) {
         chunkBeg_->next_->prev_ = chunk;

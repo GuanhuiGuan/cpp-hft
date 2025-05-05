@@ -12,9 +12,12 @@ int main() {
         std::cout << "pushf: " << deq.pushFront(i) << ":" << i << '\n';
         // deq.print();
     }
+    auto it = deq.end();
+    std::cout << *it << '\n';
     for (int i {100}; i < 105; ++i) {
         std::cout << "pushb: " << deq.pushBack(i) << ":" << i << '\n';
     }
+    std::cout << *it << '\n';
     for (int i {0}; i < 3; ++i) {
         std::cout << "popf: " << deq.popFront(x) << ":" << x << '\n';
     }
