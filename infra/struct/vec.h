@@ -23,6 +23,11 @@ public:
     };
 
     Vec() : size_{0}, cap_{0}, data_{nullptr} {}
+    Vec(std::initializer_list<T> list) : size_{list.size()}, cap_{list.size()} {
+        data_ = (T*) operator new(cap_ * sizeof(T), std::align_val_t(alignof(T)));
+        size_t i {0};
+        for (auto&& x: list) {data_[i++] = x;}
+    }
     ~Vec() noexcept {if (data_) operator delete(data_);}
     void reserve(size_t cap, size_t offset = 0) {
         if (cap <= cap_) return;

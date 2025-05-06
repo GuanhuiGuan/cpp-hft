@@ -13,7 +13,7 @@ struct A {
 
 int main() {
 
-    Vec<A> v;
+    Vec<A> v {{}, {}, {}};
     v.pushBack({});
     v.pushBack({});
     A& a = v.back();
