@@ -19,8 +19,8 @@ Iter quickSelectK(Iter beg, Iter end, size_t k) {
     if (beg == end || k <= 0) return end;
     Iter part = quickSelectPartition(beg, end);
     if (part - beg == k - 1) return part;
-    if (part - beg > k - 1) return quickSelectK(beg, part - 1, k);
-    return quickSelectK(part + 1, end, k - (part - beg));
+    if (part - beg > k - 1) return quickSelectK(beg, part, k);
+    return quickSelectK(part + 1, end, k - (part - beg) - 1);
 }
 
 class TradingEngine {
