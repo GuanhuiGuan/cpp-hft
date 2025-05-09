@@ -2,25 +2,21 @@
 
 #include <deque>
 
-template<typename Iter>
-Iter quickSelectPartition(Iter beg, Iter end) {
-    auto pivotVal = *beg;
-    Iter i = beg + 1;
-    Iter j = beg - 1;
-    for (; i != end; ++i) {
-        if (*i < pivotVal) std::swap(*(++j), *i);
+// end is a valid index
+template<typename Container, typename Cmp>
+auto quickSelectK(Container ct, long beg, long end, long idx, Cmp cmp) {
+    if (beg == end) return ct[beg];
+    auto pv = ct[beg];
+    auto low = beg, high = end;
+    while (low <= high) {
+        while (low <= high && cmp(ct[low], pv)) ++low;
+        while (low <= high && cmp(pv, ct[high])) --high;
+        if (low <= high) std::swap(ct[low++], ct[high--]);
     }
-    std::swap(*(++j), *beg);
-    return j;
-}
-
-template<typename Iter>
-Iter quickSelectK(Iter beg, Iter end, size_t k) {
-    if (beg == end || k <= 0) return end;
-    Iter part = quickSelectPartition(beg, end);
-    if (part - beg == k - 1) return part;
-    if (part - beg > k - 1) return quickSelectK(beg, part, k);
-    return quickSelectK(part + 1, end, k - (part - beg) - 1);
+    // at this point, low = high+1 OR low = high+2
+    if (idx <= high) return quickSelectK(ct, beg, high, idx, cmp);
+    else if (idx >= low) return quickSelectK(ct, low, end, idx, cmp);
+    return ct[idx];
 }
 
 class TradingEngine {
@@ -58,7 +54,7 @@ private:
         temp_.reserve(orders_.size());
         for (size_t i {0}; i < orders_.size(); ++i) temp_.push_back(orders_[i].price);
 
-        return *quickSelectK(temp_.begin(), temp_.end(), k);
+        return quickSelectK(temp_, 0, temp_.size()-1, k-1, std::greater<>());
     }
 };
 
