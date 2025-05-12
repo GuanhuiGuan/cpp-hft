@@ -2,11 +2,45 @@
 
 #include <deque>
 
+template<typename Container, typename Cmp>
+void insertionSort(Container& vec, long beg, long end, const Cmp& cmp) {
+    using T = Container::value_type;
+    if (beg == end) return;
+    for (long i = beg + 1; i <= end; ++i) {
+        T vi = vec[i];
+        long j = i;
+        for (; j > 0; --j) {
+            if (cmp(vi, vec[j-1])) {
+                vec[j] = vec[j-1]; 
+            } else {
+                break;
+            }
+        }
+        vec[j] = vi;
+    }
+}
+
+template<typename Container, typename Cmp>
+auto getMedian(Container& vec, long beg, long end, const Cmp& cmp) {
+    using T = Container::value_type;
+    if (beg == end) return vec[beg];
+    if (end - beg <= 4) {
+        insertionSort(vec, beg, end, cmp);
+        return vec[beg + (end - beg)/2];
+    }
+    Container temp;
+    for (long i = beg; i <= end; i += 5) {
+        temp.push_back(getMedian(vec, i, std::fminl(i + 4, end), cmp));
+    }
+    return getMedian(temp, 0, temp.size()-1, cmp);
+}
+
 // end is a valid index
 template<typename Container, typename Cmp>
 auto quickSelectK(Container ct, long beg, long end, long idx, Cmp cmp) {
     if (beg == end) return ct[beg];
-    auto pv = ct[beg];
+    // auto pv = ct[beg];
+    auto pv = getMedian(ct, beg, end, cmp);
     auto low = beg, high = end;
     while (low <= high) {
         while (low <= high && cmp(ct[low], pv)) ++low;

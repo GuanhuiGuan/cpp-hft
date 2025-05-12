@@ -16,5 +16,10 @@ int main() {
     auto [has2, price2] = engine.onNotify(11, 1);
     std::cout << has2 << ',' << price2 << '\n';
 
+    // std::vector<int> v {4, 6, 3, 5, 9, 10, 12};
+    // auto x = getMedian(v, 0, v.size()-1, std::less<>());
+    // std::cout << x << '\n';
+    // for (int e : v) std::cout << e << ',';
+
     return 0;
 }
