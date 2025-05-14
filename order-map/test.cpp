@@ -2,14 +2,14 @@
 
 int main() {
     OrderBook ob;
-    BuyOrder bo (1UL, 10UL, 100L);
-    ob.addOrder(bo);
-    bo = BuyOrder(2UL, 50UL, 99L);
-    ob.addOrder(bo);
-    SellOrder so (1UL, 10UL, 200L);
-    ob.addOrder(so);
-    so = SellOrder(2UL, 50UL, 199L);
-    ob.addOrder(so);
+    ob.addOrder(BuyOrder(1UL, 10UL, 10L));
+    ob.addOrder(BuyOrder(2UL, 40UL, 20L));
+    ob.addOrder(SellOrder(3UL, 10UL, 30L));
+    ob.addOrder(SellOrder(4UL, 50UL, 10L));
+    ob.addOrder(BuyOrder(5UL, 70UL, 40L));
+
+    std::cout << ob.getTotalBought() << '\n';
+    std::cout << ob.getTotalSold() << '\n';
 
     std::vector<BuyOrder> bv;
     ob.getTopK(bv, 5);

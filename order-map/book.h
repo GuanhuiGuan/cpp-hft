@@ -33,23 +33,62 @@ struct SellOrder : public Order {
 };
 
 class OrderBook {
-    // std::unordered_map<Uid, std::map<Pricelvl, BuyOrder>::iterator> buyIdMap;
     std::map<Pricelvl, BuyOrder, std::greater<Pricelvl>> buyMap; // highest buy
-    // std::unordered_map<Uid, std::map<Pricelvl, SellOrder>::iterator> sellIdMap;
     std::map<Pricelvl, SellOrder, std::less<Pricelvl>> sellMap; // lowest sell
+    Pricelvl totalBought = 0;
+    Pricelvl totalSold = 0;
 public:
     template<typename T>
-    void addOrder(const T& order) {}
+    void addOrder(T&& order) {}
     template<>
-    void addOrder(const BuyOrder& order) {
+    void addOrder(BuyOrder&& order) {
         auto [it, _] = buyMap.emplace(order.price, order);
-        // buyIdMap.emplace(order.id, it);
+        while (!sellMap.empty()
+            && it->second.price >= sellMap.begin()->first 
+            && it->second.qty > 0) {
+            
+            if (it->second.qty >= sellMap.begin()->second.qty) {
+                totalBought += sellMap.begin()->second.qty * it->first;
+                totalSold += sellMap.begin()->second.qty * sellMap.begin()->first;
+
+                it->second.qty -= sellMap.begin()->second.qty;
+                if (it->second.qty == 0) buyMap.erase(it);
+                sellMap.erase(sellMap.begin());
+            } else {
+                totalBought += it->second.qty * it->first;
+                totalSold += it->second.qty * sellMap.begin()->first;
+
+                sellMap.begin()->second.qty -= it->second.qty;
+                buyMap.erase(it);
+            }
+        }
     }
     template<>
-    void addOrder(const SellOrder& order) {
+    void addOrder(SellOrder&& order) {
         auto [it, _] = sellMap.emplace(order.price, order);
-        // sellIdMap.emplace(order.id, it);
+        while (!buyMap.empty() 
+            && it->second.price <= buyMap.begin()->second.price 
+            && it->second.qty > 0) {
+            
+            if (it->second.qty >= buyMap.begin()->second.qty) {
+                totalBought += buyMap.begin()->second.qty * buyMap.begin()->first;
+                totalSold += buyMap.begin()->second.qty * it->first;
+
+                it->second.qty -= buyMap.begin()->second.qty;
+                if (it->second.qty == 0) sellMap.erase(it);
+                buyMap.erase(buyMap.begin());
+            } else {
+                totalBought += it->second.qty * buyMap.begin()->first;
+                totalSold += it->second.qty * it->first;
+
+                buyMap.begin()->second.qty -= it->second.qty;
+                sellMap.erase(it);
+            }
+        }
     }
+
+    Pricelvl& getTotalBought() {return totalBought;}
+    Pricelvl& getTotalSold() {return totalSold;}
 
     template<typename T>
     void delOrder(const T& order) {}
