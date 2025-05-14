@@ -1,3 +1,8 @@
 # cpp-hft
 
-a practice demo
+HFT related practice
+
+## TODO
+- test with order feed
+- benchmark
+- implement limit()
