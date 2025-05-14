@@ -1,7 +1,7 @@
 #ifndef ORDER_ORDER_H
 #define ORDER_ORDER_H
 
-#include "../infra/common.h"
+#include "../infra/struct/common.h"
 
 namespace kwan {
 
